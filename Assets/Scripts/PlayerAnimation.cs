@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerAnimation : MonoBehaviour
 {
     private Animator _anim;
+    private Animator _swordAnim;
 
     private void Awake()
     {
         _anim = GetComponentInChildren<Animator>();
+        _swordAnim = transform.GetChild(1).GetComponent<Animator>();
     }
 
     public void Move(float _input)
@@ -19,5 +21,16 @@ public class PlayerAnimation : MonoBehaviour
     public void Jump(bool isJumping)
     {
         _anim.SetBool("isJumping", isJumping);
+    }
+
+    public void Attack()
+    {
+        _anim.SetTrigger("attack");
+        _swordAnim.SetTrigger("swordAnimation");
+    }
+
+    public void SwordArcPosition(bool isReverse)
+    {
+        _swordAnim.SetBool("isReverse", isReverse);
     }
 }
