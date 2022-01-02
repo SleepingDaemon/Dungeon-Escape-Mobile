@@ -2,54 +2,81 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, IDamageable
 {
-    [SerializeField] protected int _health;
-    [SerializeField] protected float _speed;
-    [SerializeField] protected int _gems;
-    [SerializeField] protected Transform _pointA, _pointB;
+    [SerializeField] protected int health;
+    [SerializeField] protected float speed;
+    [SerializeField] protected int gems;
+    [SerializeField] protected Transform pointA, pointB;
 
-    private Animator _enemyAnim;
-    private SpriteRenderer _enemySprite;
-    private Vector3 _currentTarget;
-    protected bool _isSwitching = false;
+    protected Animator enemyAnim;
+    protected SpriteRenderer enemySprite;
+    protected Vector3 currentTarget;
 
-    private void Awake()
+    public int Health { get => health; set => health = value; }
+
+    public virtual void Awake()
     {
-        _enemyAnim = GetComponentInChildren<Animator>();
-        _enemySprite = GetComponentInChildren<SpriteRenderer>();
+        InitComponents();
+    }
+
+    public virtual void Start()
+    {
+        InitData();
     }
 
     public virtual void Update()
     {
-        if (_enemyAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) return;
+        if (enemyAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))    return;
+        if (enemyAnim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))     return;
 
         Move();
     }
 
-    public virtual void Attack()
+    //Initialize All References to Components
+    public virtual void InitComponents()
     {
-        Debug.Log("Base Attack");
+        enemyAnim = GetComponentInChildren<Animator>();
+        enemySprite = GetComponentInChildren<SpriteRenderer>();
     }
 
+    //Initialize Data from Child Classes
+    public virtual void InitData()
+    {
+        //base
+    }
+
+    //Move all enemies from Point A to B.
     public virtual void Move()
     {
-        if (_currentTarget == _pointA.position)
-            _enemySprite.flipX = true;
-        else if (_currentTarget == _pointB.position)
-            _enemySprite.flipX = false;
+        if (currentTarget == pointA.position)
+            enemySprite.flipX = true;
+        else if (currentTarget == pointB.position)
+            enemySprite.flipX = false;
 
-        if (transform.position == _pointA.position)
+        if (transform.position == pointA.position)
         {
-            _currentTarget = _pointB.position;
-            _enemyAnim.SetTrigger("idle");
+            currentTarget = pointB.position;
+            enemyAnim.SetTrigger("idle");
         }
-        else if (transform.position == _pointB.position)
+        else if (transform.position == pointB.position)
         {
-            _currentTarget = _pointA.position;
-            _enemyAnim.SetTrigger("idle");
+            currentTarget = pointA.position;
+            enemyAnim.SetTrigger("idle");
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, _currentTarget, _speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+    }
+
+    public virtual void OnDamage(int amount)
+    {
+        health -= amount;
+        enemyAnim.SetTrigger("hit");
+
+        if(health <= 0)
+        {
+            print("Enemy: " + this.gameObject.name + " died!");
+            Destroy(this.gameObject);
+        }
     }
 }

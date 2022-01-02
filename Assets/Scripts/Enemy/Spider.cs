@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Spider : Enemy
 {
-    public override void Attack()
+    public override void InitData()
     {
-        base.Attack();
-        Debug.Log("Spider is Attacking!");
+        base.InitData();
+        speed = 3f;
     }
 
     public override void Update()
     {
-        
+        base.Update();
     }
 }

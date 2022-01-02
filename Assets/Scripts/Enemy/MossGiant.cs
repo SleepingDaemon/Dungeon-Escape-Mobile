@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class MossGiant : Enemy
 {
-    private void Start()
+    public override void InitData()
     {
-        
-    }
-
-    public override void Attack()
-    {
-        base.Attack();
-        Debug.Log("MossGiant is Attacking!");
+        base.InitData();
+        speed = 1.4f;
     }
 
     public override void Update()
