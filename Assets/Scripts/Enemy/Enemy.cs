@@ -9,7 +9,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [SerializeField] protected int gems;
     [SerializeField] protected Transform pointA, pointB;
 
-    protected bool _isHit = false;
+    protected bool isHit = false;
+    protected bool isDead = false;
     protected Animator enemyAnim;
     protected SpriteRenderer enemySprite;
     protected Vector3 currentTarget;
@@ -31,8 +32,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     public virtual void Update()
     {
         if (enemyAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !enemyAnim.GetBool("inCombat")) return;
-
-        Move();
+        
+        if(!isDead)
+            Move();
     }
 
     //Initialize All References to Components
@@ -70,14 +72,14 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             enemyAnim.SetTrigger("idle");
         }
 
-        if(!_isHit)
+        if(!isHit)
             transform.position = Vector3.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
 
         //Resume back to walking when not in combat
         var _distance = Vector3.Distance(player.transform.position, transform.position);
         if (_distance > 3)
         {
-            _isHit = false;
+            isHit = false;
             if (enemyAnim != null)
                 enemyAnim.SetBool("inCombat", false);
         }
@@ -106,18 +108,17 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void OnDamage(int amount)
     {
-        print("Attacked: " + this.gameObject.name);
         health -= amount;
+
         enemyAnim.SetTrigger("hit");
-        _isHit = true;
+        isHit = true;
         enemyAnim.SetBool("inCombat", true);
-        
 
-
-        if(health <= 0)
+        if (health <= 0)
         {
-            print("Enemy: " + this.gameObject.name + " died!");
-            Destroy(this.gameObject);
+            isDead = true;
+            enemyAnim.SetTrigger("dead");
+            //Destroy(this.gameObject, 3f);
         }
     }
 }

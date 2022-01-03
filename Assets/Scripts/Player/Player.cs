@@ -8,6 +8,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _speed = 4f;
     [SerializeField] private float _jumpHeight = 10f;
     [SerializeField] private bool _isJumping = false;
+    [SerializeField] private float timeBetweenAttack = 1f;
     private bool _enableJump = false;
     private bool _isGrounded;
     private bool _isAttacking = false;
@@ -40,7 +41,7 @@ public class Player : MonoBehaviour, IDamageable
             _enableJump = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && _isGrounded)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && _isGrounded && !_isAttacking)
         {
             StartCoroutine(AttackRoutine());
         }
@@ -120,7 +121,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         _isAttacking = true;
         _anim.Attack();
-        yield return new WaitForSeconds(0.47f);
+        yield return new WaitForSeconds(timeBetweenAttack);
         _isAttacking = false;
     }
 
