@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
+    [SerializeField] private int health = 5;
     [SerializeField] private float _speed = 4f;
     [SerializeField] private float _jumpHeight = 10f;
     [SerializeField] private bool _isJumping = false;
@@ -16,6 +17,8 @@ public class Player : MonoBehaviour
     private Animator _swordArcAnim;
     private Grounding _grounding;
     private PlayerAnimation _anim;
+
+    public int Health { get => health; set => health = value; }
 
     private void Awake()
     {
@@ -72,26 +75,31 @@ public class Player : MonoBehaviour
 
     private void FlipSpritesOnMoveDirection(float xMove)
     {
-        Vector3 _swordArcPos = _swordArcSprite.transform.localPosition;
-        Vector3 _swordArcRot = _swordArcSprite.transform.localEulerAngles;
+        //Vector3 _swordArcPos = _swordArcSprite.transform.localPosition;
+        //Vector3 _swordArcRot = _swordArcSprite.transform.localEulerAngles;
+        Vector3 _flipPlayerPos = transform.localScale;
 
         if (xMove > 0.01f)
         {
-            _swordArcPos.x = 0.5f;
-            _swordArcRot.x = 66f;
-            _swordArcSprite.flipY = false;
-            _sprite.flipX = false;
+            //_swordArcPos.x = 0.5f;
+            //_swordArcRot.x = 66f;
+            //_swordArcSprite.flipY = false;
+            //_sprite.flipX = false;
+            _flipPlayerPos.x = 1;
+
         }
         else if (xMove < -0.01f)
         {
-            _swordArcPos.x = -0.5f;
-            _swordArcRot.x = -66f;
-            _swordArcSprite.flipY = true;
-            _sprite.flipX = true;
+            //_swordArcPos.x = -0.5f;
+            //_swordArcRot.x = -66f;
+            //_swordArcSprite.flipY = true;
+            //_sprite.flipX = true;
+            _flipPlayerPos.x = -1;
         }
 
-        _swordArcSprite.transform.localPosition = _swordArcPos;
-        _swordArcSprite.transform.localEulerAngles = _swordArcRot;
+        //_swordArcSprite.transform.localPosition = _swordArcPos;
+        //_swordArcSprite.transform.localEulerAngles = _swordArcRot;
+        transform.localScale = _flipPlayerPos;
     }
 
     private void HandleJumping()
@@ -114,5 +122,16 @@ public class Player : MonoBehaviour
         _anim.Attack();
         yield return new WaitForSeconds(0.47f);
         _isAttacking = false;
+    }
+
+    public void OnDamage(int amount)
+    {
+        health -= amount;
+
+        if(health <= 0)
+        {
+            //Game over
+            print("Game Over");
+        }
     }
 }

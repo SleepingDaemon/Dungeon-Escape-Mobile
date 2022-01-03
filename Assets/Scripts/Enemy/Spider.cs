@@ -9,9 +9,4 @@ public class Spider : Enemy
         base.InitData();
         speed = 3f;
     }
-
-    public override void Update()
-    {
-        base.Update();
-    }
 }

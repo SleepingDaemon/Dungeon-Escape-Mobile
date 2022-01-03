@@ -9,9 +9,12 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [SerializeField] protected int gems;
     [SerializeField] protected Transform pointA, pointB;
 
+    protected bool _isHit = false;
     protected Animator enemyAnim;
     protected SpriteRenderer enemySprite;
     protected Vector3 currentTarget;
+    protected Vector3 direction;
+    protected Player player;
 
     public int Health { get => health; set => health = value; }
 
@@ -27,8 +30,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void Update()
     {
-        if (enemyAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))    return;
-        if (enemyAnim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))     return;
+        if (enemyAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !enemyAnim.GetBool("inCombat")) return;
 
         Move();
     }
@@ -38,6 +40,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         enemyAnim = GetComponentInChildren<Animator>();
         enemySprite = GetComponentInChildren<SpriteRenderer>();
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     //Initialize Data from Child Classes
@@ -65,13 +68,41 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             enemyAnim.SetTrigger("idle");
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+        if(!_isHit)
+            transform.position = Vector3.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+
+        var _distance = Vector3.Distance(player.transform.position, transform.position);
+        if (_distance > 2)
+        {
+            _isHit = false;
+            if (enemyAnim != null)
+                enemyAnim.SetBool("inCombat", false);
+        }
+
+        if (enemyAnim.GetBool("inCombat"))
+        {
+            direction = player.transform.position - transform.localPosition;
+            if (direction.x > 0)
+            {
+                // face left
+                enemySprite.flipX = false;
+            }
+            else if (direction.x < 0)
+            {
+                // face right
+                enemySprite.flipX = true;
+            }
+        }
     }
 
     public virtual void OnDamage(int amount)
     {
         health -= amount;
         enemyAnim.SetTrigger("hit");
+        _isHit = true;
+        enemyAnim.SetBool("inCombat", true);
+        
+
 
         if(health <= 0)
         {

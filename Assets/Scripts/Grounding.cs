@@ -5,7 +5,6 @@ using UnityEngine;
 public class Grounding : MonoBehaviour
 {
     [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private Transform _groundCheck;
     [SerializeField] private float _groundCheckDistance;
     [SerializeField] private bool _isGrounded;
 
