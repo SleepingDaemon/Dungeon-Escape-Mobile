@@ -52,10 +52,12 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     //Move all enemies from Point A to B.
     public virtual void Move()
     {
+        Vector3 _flipXpos = transform.localScale;
+
         if (currentTarget == pointA.position)
-            enemySprite.flipX = true;
+            _flipXpos.x = -1;
         else if (currentTarget == pointB.position)
-            enemySprite.flipX = false;
+            _flipXpos.x = 1;
 
         if (transform.position == pointA.position)
         {
@@ -71,32 +73,40 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         if(!_isHit)
             transform.position = Vector3.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
 
+        //Resume back to walking when not in combat
         var _distance = Vector3.Distance(player.transform.position, transform.position);
-        if (_distance > 2)
+        if (_distance > 3)
         {
             _isHit = false;
             if (enemyAnim != null)
                 enemyAnim.SetBool("inCombat", false);
         }
 
+        //When in combat, face the player direction
         if (enemyAnim.GetBool("inCombat"))
         {
-            direction = player.transform.position - transform.localPosition;
+            direction = player.transform.position - transform.position;
+            
             if (direction.x > 0)
             {
                 // face left
-                enemySprite.flipX = false;
+                //enemySprite.flipX = false;
+                _flipXpos.x = 1;
             }
             else if (direction.x < 0)
             {
                 // face right
-                enemySprite.flipX = true;
+                //enemySprite.flipX = true;
+                _flipXpos.x = -1;
             }
         }
+
+        transform.localScale = _flipXpos;
     }
 
     public virtual void OnDamage(int amount)
     {
+        print("Attacked: " + this.gameObject.name);
         health -= amount;
         enemyAnim.SetTrigger("hit");
         _isHit = true;

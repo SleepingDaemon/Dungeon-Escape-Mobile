@@ -127,6 +127,7 @@ public class Player : MonoBehaviour, IDamageable
     public void OnDamage(int amount)
     {
         health -= amount;
+        print("Player is Hit!");
 
         if(health <= 0)
         {
