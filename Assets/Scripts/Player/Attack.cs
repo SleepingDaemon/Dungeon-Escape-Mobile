@@ -9,8 +9,8 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Hit: " + other.gameObject.name);
         var hit = other.GetComponent<IDamageable>();
+
         if (hit != null)
         {
             if (!_onHit)

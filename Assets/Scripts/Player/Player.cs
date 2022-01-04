@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int health = 5;
-    [SerializeField] private float _speed = 4f;
-    [SerializeField] private float _jumpHeight = 10f;
-    [SerializeField] private bool _isJumping = false;
-    [SerializeField] private float timeBetweenAttack = 1f;
-    [SerializeField] private Collider2D playerCollider;
-    [SerializeField] private int diamonds = 0;
-    private bool _enableJump = false;
+    [SerializeField] private int            health              = 5;
+    [SerializeField] private float          _speed              = 4f;
+    [SerializeField] private float          _jumpHeight         = 10f;
+    [SerializeField] private bool           _isJumping          = false;
+    [SerializeField] private float          timeBetweenAttack   = 1f;
+    [SerializeField] private Collider2D     playerCollider;
+    [SerializeField] private int            diamonds            = 0;
+    private bool _enableJump    = false;
     private bool _isGrounded;
-    private bool _isAttacking = false;
-    private bool _onHit = false;
-    private bool _isDead = false;
+    private bool _isAttacking   = false;
+    private bool _onHit         = false;
+    private bool _isDead        = false;
     private Rigidbody2D _rb2D;
     private SpriteRenderer _sprite;
     private SpriteRenderer _swordArcSprite;
@@ -42,7 +42,6 @@ public class Player : MonoBehaviour, IDamageable
         if (_isDead) return;
         if (_anim.OnHitState()) return;
 
-        //Enable Jumping when hitting the space key
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             _enableJump = true;
@@ -87,30 +86,17 @@ public class Player : MonoBehaviour, IDamageable
 
     private void FlipSpritesOnMoveDirection(float xMove)
     {
-        //Vector3 _swordArcPos = _swordArcSprite.transform.localPosition;
-        //Vector3 _swordArcRot = _swordArcSprite.transform.localEulerAngles;
         Vector3 _flipPlayerPos = transform.localScale;
 
         if (xMove > 0.01f)
         {
-            //_swordArcPos.x = 0.5f;
-            //_swordArcRot.x = 66f;
-            //_swordArcSprite.flipY = false;
-            //_sprite.flipX = false;
             _flipPlayerPos.x = 1;
-
         }
         else if (xMove < -0.01f)
         {
-            //_swordArcPos.x = -0.5f;
-            //_swordArcRot.x = -66f;
-            //_swordArcSprite.flipY = true;
-            //_sprite.flipX = true;
             _flipPlayerPos.x = -1;
         }
 
-        //_swordArcSprite.transform.localPosition = _swordArcPos;
-        //_swordArcSprite.transform.localEulerAngles = _swordArcRot;
         transform.localScale = _flipPlayerPos;
     }
 
@@ -148,11 +134,10 @@ public class Player : MonoBehaviour, IDamageable
             //Game over
             _anim.Death();
             _isDead = true;
-            //_rb2D.gravityScale = 0;
-            //playerCollider.enabled = false;
         }
     }
 
+    public int GetDiamondAmount() => diamonds;
     public void AddDiamond(int amount) => diamonds += amount;
 
     public bool IsPlayerDead() => _isDead;

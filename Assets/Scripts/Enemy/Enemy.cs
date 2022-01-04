@@ -6,9 +6,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] protected int health;
     [SerializeField] protected float speed;
-    [SerializeField] protected int diamonds;
+    [SerializeField] protected int gems;
     [SerializeField] protected Transform pointA, pointB;
-    [SerializeField] protected GameObject diamondPrefab;
+    [SerializeField] protected GameObject gemPrefab;
 
     protected bool isHit = false;
     protected bool isDead = false;
@@ -92,14 +92,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             
             if (direction.x > 0)
             {
-                // face left
-                //enemySprite.flipX = false;
                 _flipXpos.x = 1;
             }
             else if (direction.x < 0)
             {
-                // face right
-                //enemySprite.flipX = true;
                 _flipXpos.x = -1;
             }
         }
@@ -127,8 +123,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void DropLoot()
     {
-        var diamondGO = Instantiate(diamondPrefab, transform.position, Quaternion.identity) as GameObject;
-        var diamondScript = diamondGO.GetComponent<Diamond>();
-        diamondScript.SetDiamondAmount(diamonds);
+        var gemsGO = Instantiate(gemPrefab, transform.position, Quaternion.identity) as GameObject;
+        var gemScript = gemsGO.GetComponent<Gem>();
+        gemScript.SetDiamondAmount(gems);
     }
 }
