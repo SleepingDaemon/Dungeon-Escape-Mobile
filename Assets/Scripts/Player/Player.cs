@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,9 +10,13 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _jumpHeight = 10f;
     [SerializeField] private bool _isJumping = false;
     [SerializeField] private float timeBetweenAttack = 1f;
+    [SerializeField] private Collider2D playerCollider;
+    [SerializeField] private int diamonds = 0;
     private bool _enableJump = false;
     private bool _isGrounded;
     private bool _isAttacking = false;
+    private bool _onHit = false;
+    private bool _isDead = false;
     private Rigidbody2D _rb2D;
     private SpriteRenderer _sprite;
     private SpriteRenderer _swordArcSprite;
@@ -34,6 +39,8 @@ public class Player : MonoBehaviour, IDamageable
     private void Update()
     {
         _isGrounded = _grounding.IsGrounded();
+        if (_isDead) return;
+        if (_anim.OnHitState()) return;
 
         //Enable Jumping when hitting the space key
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
@@ -49,8 +56,11 @@ public class Player : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        if (_isAttacking)
+        if (_isDead) return;
+
+        if (_isAttacking || _onHit || _isDead)
         {
+            _onHit = false;
             _rb2D.velocity = Vector2.zero;
             return;
         }
@@ -70,7 +80,8 @@ public class Player : MonoBehaviour, IDamageable
             _anim.Jump(true);
         }
 
-        _rb2D.velocity = new Vector3(xMove * _speed, _rb2D.velocity.y, 0);
+        if(!_onHit)
+            _rb2D.velocity = new Vector3(xMove * _speed, _rb2D.velocity.y, 0);
         _anim.Move(xMove);
     }
 
@@ -128,12 +139,21 @@ public class Player : MonoBehaviour, IDamageable
     public void OnDamage(int amount)
     {
         health -= amount;
-        print("Player is Hit!");
+        _onHit = true;
+        _anim.Hit();
+
 
         if(health <= 0)
         {
             //Game over
-            print("Game Over");
+            _anim.Death();
+            _isDead = true;
+            //_rb2D.gravityScale = 0;
+            //playerCollider.enabled = false;
         }
     }
+
+    public void AddDiamond(int amount) => diamonds += amount;
+
+    public bool IsPlayerDead() => _isDead;
 }

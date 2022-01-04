@@ -6,7 +6,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] protected int health;
     [SerializeField] protected float speed;
-    [SerializeField] protected int gems;
+    [SerializeField] protected int diamond;
     [SerializeField] protected Transform pointA, pointB;
 
     protected bool isHit = false;
@@ -77,7 +77,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         //Resume back to walking when not in combat
         var _distance = Vector3.Distance(player.transform.position, transform.position);
-        if (_distance > 3)
+        if (_distance > 2 || player.IsPlayerDead())
         {
             isHit = false;
             if (enemyAnim != null)
@@ -121,4 +121,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             //Destroy(this.gameObject, 3f);
         }
     }
+
+    public int GetDiamond() => diamond;
 }
