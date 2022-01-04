@@ -125,6 +125,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         var gemsGO = Instantiate(gemPrefab, transform.position, Quaternion.identity) as GameObject;
         var gemScript = gemsGO.GetComponent<Gem>();
-        gemScript.SetDiamondAmount(gems);
+        gemScript.SetGemAmount(gems);
     }
 }

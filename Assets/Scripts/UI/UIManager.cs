@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     }
 
     [SerializeField] private Text playerGemAmount;
+    [SerializeField] private Image selectionIMG;
 
     private void Awake()
     {
@@ -25,5 +26,10 @@ public class UIManager : MonoBehaviour
     public void OpenShop(int gemCount)
     {
         playerGemAmount.text = gemCount.ToString() + "G";
+    }
+
+    public void UpdateShopSelection(float yPos)
+    {
+        selectionIMG.rectTransform.anchoredPosition = new Vector2(selectionIMG.rectTransform.anchoredPosition.x, yPos);
     }
 }

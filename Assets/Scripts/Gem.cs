@@ -19,5 +19,5 @@ public class Gem : MonoBehaviour
         }
     }
 
-    public void SetDiamondAmount(int value) => diamonds = value;
+    public void SetGemAmount(int value) => diamonds = value;
 }
