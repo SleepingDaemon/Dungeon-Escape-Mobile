@@ -24,11 +24,13 @@ public class Spider : Enemy
     public override void Move() { }
     public override void OnDamage(int amount)
     {
+        if (isDead) return;
         health -= amount;
 
         if (health <= 0)
         {
             enemyAnim.SetTrigger("dead");
+            DropLoot();
             //Destroy(this.gameObject, 3f);
         }
     }

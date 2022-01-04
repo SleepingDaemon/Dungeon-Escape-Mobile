@@ -6,8 +6,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] protected int health;
     [SerializeField] protected float speed;
-    [SerializeField] protected int diamond;
+    [SerializeField] protected int diamonds;
     [SerializeField] protected Transform pointA, pointB;
+    [SerializeField] protected GameObject diamondPrefab;
 
     protected bool isHit = false;
     protected bool isDead = false;
@@ -108,6 +109,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void OnDamage(int amount)
     {
+        if (isDead) return;
         health -= amount;
 
         enemyAnim.SetTrigger("hit");
@@ -118,9 +120,15 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         {
             isDead = true;
             enemyAnim.SetTrigger("dead");
+            DropLoot();
             //Destroy(this.gameObject, 3f);
         }
     }
 
-    public int GetDiamond() => diamond;
+    public virtual void DropLoot()
+    {
+        var diamondGO = Instantiate(diamondPrefab, transform.position, Quaternion.identity) as GameObject;
+        var diamondScript = diamondGO.GetComponent<Diamond>();
+        diamondScript.SetDiamondAmount(diamonds);
+    }
 }

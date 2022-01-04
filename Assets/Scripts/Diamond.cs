@@ -18,4 +18,6 @@ public class Diamond : MonoBehaviour
             }
         }
     }
+
+    public void SetDiamondAmount(int value) => diamonds = value;
 }
