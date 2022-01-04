@@ -11,7 +11,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private bool           _isJumping          = false;
     [SerializeField] private float          timeBetweenAttack   = 1f;
     [SerializeField] private Collider2D     playerCollider;
-    [SerializeField] private int            diamonds            = 0;
+    [SerializeField] private int            gems            = 0;
     private bool _enableJump    = false;
     private bool _isGrounded;
     private bool _isAttacking   = false;
@@ -137,8 +137,9 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    public int GetDiamondAmount() => diamonds;
-    public void AddDiamond(int amount) => diamonds += amount;
+    public int GetGemAmount() => gems;
+    public void AddGem(int amount) => gems += amount;
+    public void SubGem(int amount) => gems -= amount;
 
     public bool IsPlayerDead() => _isDead;
 }

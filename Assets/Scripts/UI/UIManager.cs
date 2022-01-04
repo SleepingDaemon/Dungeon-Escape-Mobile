@@ -15,21 +15,31 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private Text keyAmount;
+    [SerializeField] private Text bootsAmount;
+    [SerializeField] private Text flameSwordAmount;
     [SerializeField] private Text playerGemAmount;
     [SerializeField] private Image selectionIMG;
+    [SerializeField] private GameObject selectionGO;
 
     private void Awake()
     {
         _instance = this;
     }
 
-    public void OpenShop(int gemCount)
+    public void OpenShop(int gemCount, int key, int boot, int flamesword)
     {
         playerGemAmount.text = gemCount.ToString() + "G";
+        flameSwordAmount.text = flamesword.ToString() + "G";
+        bootsAmount.text = boot.ToString() + "G";
+        keyAmount.text = key.ToString() + "G";
     }
 
     public void UpdateShopSelection(float yPos)
     {
+        selectionGO.SetActive(true);
         selectionIMG.rectTransform.anchoredPosition = new Vector2(selectionIMG.rectTransform.anchoredPosition.x, yPos);
     }
+
+    public void DisableSelectionGO() => selectionGO.SetActive(false);
 }

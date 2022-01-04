@@ -13,7 +13,7 @@ public class Gem : MonoBehaviour
             Player _player = other.GetComponent<Player>();
             if(_player != null)
             {
-                _player.AddDiamond(diamonds);
+                _player.AddGem(diamonds);
                 Destroy(gameObject);
             }
         }
