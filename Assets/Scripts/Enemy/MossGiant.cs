@@ -9,9 +9,4 @@ public class MossGiant : Enemy
         base.InitData();
         speed = 1.4f;
     }
-
-    public override void Update()
-    {
-        base.Update();
-    }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -10,8 +11,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float          _jumpHeight         = 10f;
     [SerializeField] private bool           _isJumping          = false;
     [SerializeField] private float          timeBetweenAttack   = 1f;
-    [SerializeField] private Collider2D     playerCollider;
-    [SerializeField] private int            gems                = 0;
     private bool _enableJump    = false;
     private bool _isGrounded;
     private bool _isAttacking   = false;
@@ -42,12 +41,12 @@ public class Player : MonoBehaviour, IDamageable
         if (_isDead) return;
         if (_anim.OnHitState()) return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Jump") && _isGrounded)
         {
             _enableJump = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && _isGrounded && !_isAttacking)
+        if (CrossPlatformInputManager.GetButtonDown("Attack") && _isGrounded && !_isAttacking)
         {
             StartCoroutine(AttackRoutine());
         }
@@ -64,7 +63,7 @@ public class Player : MonoBehaviour, IDamageable
             return;
         }
 
-        float xMove = Input.GetAxisRaw("Horizontal");
+        float xMove = CrossPlatformInputManager.GetAxis("Horizontal");
 
         FlipSpritesOnMoveDirection(xMove);
 
@@ -137,15 +136,6 @@ public class Player : MonoBehaviour, IDamageable
             _isDead = true;
         }
     }
-
-    public int GetGemAmount() => gems;
-    public void AddGem(int amount)
-    {
-        gems += amount;
-        UIManager.Instance.UpdateGemCount(gems);
-    }
-
-    public void SubGem(int amount) => gems -= amount;
 
     public bool IsPlayerDead() => _isDead;
 }

@@ -21,6 +21,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text flameSwordAmount;
     [SerializeField] private Text playerGemAmount;
     [SerializeField] private Image selectionIMG;
+    [SerializeField] private Image aButton;
+    [SerializeField] private Image bButton;
+    [SerializeField] private Image joyStick;
     [SerializeField] private GameObject selectionGO;
     [SerializeField] private GameObject uiShop;
     [SerializeField] private GameObject hudGO;
@@ -34,10 +37,23 @@ public class UIManager : MonoBehaviour
     public void OpenShop(int gemCount, int key, int boot, int flamesword)
     {
         hudGO.SetActive(false);
+        aButton.enabled = false;
+        bButton.enabled = false;
+        joyStick.enabled = false;
         playerGemAmount.text = gemCount.ToString() + "G";
         flameSwordAmount.text = flamesword.ToString() + "G";
         bootsAmount.text = boot.ToString() + "G";
         keyAmount.text = key.ToString() + "G";
+    }
+
+    public void CloseShop()
+    {
+        uiShop.SetActive(false);
+        selectionGO.SetActive(false);
+        hudGO.SetActive(true);
+        aButton.enabled = true;
+        bButton.enabled = true;
+        joyStick.enabled = true;
     }
 
     public void UpdateShopSelection(float yPos)
@@ -50,6 +66,8 @@ public class UIManager : MonoBehaviour
     {
         gemCountDisplay.text = gemCount.ToString() + "G";
     }
+
+    public void UpdateShopGemCount(int gemCount) => playerGemAmount.text = gemCount.ToString() + "G";
 
     public void UpdateLives(int livesRemaining)
     {

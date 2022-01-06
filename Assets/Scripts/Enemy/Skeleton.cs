@@ -9,9 +9,4 @@ public class Skeleton : Enemy
         base.InitData();
         speed = 0.6f;
     }
-
-    public override void Update()
-    {
-        base.Update();
-    }
 }

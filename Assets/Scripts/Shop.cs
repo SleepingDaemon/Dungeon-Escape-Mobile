@@ -9,19 +9,16 @@ public class Shop : MonoBehaviour
     [SerializeField] private int keyToCastleCost = 100;
     private int _currentItemCost;
     private int _currentSelectedItem;
-    private int playerGemAmount;
     private Player _player;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            UIManager.Instance.EnableHUD(false);
             _player = other.GetComponent<Player>();
             if(_player != null)
             {
-                playerGemAmount = _player.GetGemAmount();
-                UIManager.Instance.OpenShop(_player.GetGemAmount(), keyToCastleCost, bootsOfFlightCost, flameSwordCost);
+                UIManager.Instance.OpenShop(GameManager.Instance.GetGemsAmount(), keyToCastleCost, bootsOfFlightCost, flameSwordCost);
             }
 
             UIManager.Instance.EnableShop(true);
@@ -32,15 +29,12 @@ public class Shop : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            UIManager.Instance.EnableShop(false);
-            UIManager.Instance.EnableHUD(true);
+            UIManager.Instance.CloseShop();
         }
     }
 
     public void SelectItem(int item)
     {
-        print("Selected item " + item);
-
         switch (item)
         {
             case 0:
@@ -59,23 +53,23 @@ public class Shop : MonoBehaviour
                 _currentItemCost = keyToCastleCost;
                 break;
         }
+
+        Debug.Log("Item Selected: " + item);
     }
 
     public void BuyItem()
     {
-        if(_player.GetGemAmount() >= _currentItemCost)
+        if(GameManager.Instance.GetGemsAmount() >= _currentItemCost)
         {
             if (_currentSelectedItem == 2)
                 GameManager.Instance.HasKeyToCastle = true;
 
-            _player.SubGem(_currentItemCost);
-            UIManager.Instance.OpenShop(_player.GetGemAmount(), keyToCastleCost, bootsOfFlightCost, flameSwordCost);
+            GameManager.Instance.SubGems(_currentItemCost);
+            UIManager.Instance.OpenShop(GameManager.Instance.GetGemsAmount(), keyToCastleCost, bootsOfFlightCost, flameSwordCost);
         }
         else
         {
-            UIManager.Instance.DisableSelectionGO();
-            UIManager.Instance.EnableShop(false);
-            UIManager.Instance.EnableHUD(true);
+            UIManager.Instance.CloseShop();
         }
     }
 }

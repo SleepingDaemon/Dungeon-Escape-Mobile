@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Gem : MonoBehaviour
 {
-    [SerializeField] private int diamonds = 1;
+    [SerializeField] private int _gems = 1;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -13,11 +13,11 @@ public class Gem : MonoBehaviour
             Player _player = other.GetComponent<Player>();
             if(_player != null)
             {
-                _player.AddGem(diamonds);
+                GameManager.Instance.AddGems(_gems);
                 Destroy(gameObject);
             }
         }
     }
 
-    public void SetGemAmount(int value) => diamonds = value;
+    public void SetGemAmount(int value) => _gems = value;
 }
