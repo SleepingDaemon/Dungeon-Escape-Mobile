@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int            health              = 5;
+    [SerializeField] private int            health              = 4;
     [SerializeField] private float          _speed              = 4f;
     [SerializeField] private float          _jumpHeight         = 10f;
     [SerializeField] private bool           _isJumping          = false;
     [SerializeField] private float          timeBetweenAttack   = 1f;
     [SerializeField] private Collider2D     playerCollider;
-    [SerializeField] private int            gems            = 0;
+    [SerializeField] private int            gems                = 0;
     private bool _enableJump    = false;
     private bool _isGrounded;
     private bool _isAttacking   = false;
@@ -124,10 +124,11 @@ public class Player : MonoBehaviour, IDamageable
 
     public void OnDamage(int amount)
     {
+        if (_isDead) return;
         health -= amount;
+        UIManager.Instance.UpdateLives(health);
         _onHit = true;
         _anim.Hit();
-
 
         if(health <= 0)
         {
@@ -138,7 +139,12 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     public int GetGemAmount() => gems;
-    public void AddGem(int amount) => gems += amount;
+    public void AddGem(int amount)
+    {
+        gems += amount;
+        UIManager.Instance.UpdateGemCount(gems);
+    }
+
     public void SubGem(int amount) => gems -= amount;
 
     public bool IsPlayerDead() => _isDead;

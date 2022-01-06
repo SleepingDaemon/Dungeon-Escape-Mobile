@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    [SerializeField] private GameObject uiShop;
     [SerializeField] private int flameSwordCost = 200;
     [SerializeField] private int bootsOfFlightCost = 400;
     [SerializeField] private int keyToCastleCost = 100;
@@ -17,13 +16,15 @@ public class Shop : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            UIManager.Instance.EnableHUD(false);
             _player = other.GetComponent<Player>();
             if(_player != null)
             {
                 playerGemAmount = _player.GetGemAmount();
                 UIManager.Instance.OpenShop(_player.GetGemAmount(), keyToCastleCost, bootsOfFlightCost, flameSwordCost);
             }
-            uiShop.SetActive(true);
+
+            UIManager.Instance.EnableShop(true);
         }
     }
 
@@ -31,7 +32,8 @@ public class Shop : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            uiShop.SetActive(false);
+            UIManager.Instance.EnableShop(false);
+            UIManager.Instance.EnableHUD(true);
         }
     }
 
@@ -57,8 +59,6 @@ public class Shop : MonoBehaviour
                 _currentItemCost = keyToCastleCost;
                 break;
         }
-
-        print(_currentSelectedItem);
     }
 
     public void BuyItem()
@@ -74,7 +74,8 @@ public class Shop : MonoBehaviour
         else
         {
             UIManager.Instance.DisableSelectionGO();
-            uiShop.SetActive(false);
+            UIManager.Instance.EnableShop(false);
+            UIManager.Instance.EnableHUD(true);
         }
     }
 }
