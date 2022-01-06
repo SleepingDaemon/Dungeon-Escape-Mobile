@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
-    [SerializeField] private Button _showAdButton;
-    [SerializeField] private string _androidGameId;
-    [SerializeField] private string _androidAdUnitId = "Rewarded_Android";
-    [SerializeField] private bool _testMode = true;
+    [SerializeField] private Button     _showAdButton;
+    [SerializeField] private string     _androidGameId;
+    [SerializeField] private string     _androidAdUnitId = "Rewarded_Android";
+    [SerializeField] private bool       _testMode = true;
 
     private void Awake()
     {
@@ -54,12 +54,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         Debug.Log($"Error showing Ad Unit {_androidAdUnitId}: {error} - {message}");
     }
 
-    public void OnUnityAdsShowStart(string placementId) 
-    {
-        Debug.Log("You Finished the ad. You receive 100G!");
-        GameManager.Instance.AddGems(100);
-        UIManager.Instance.UpdateShopGemCount(GameManager.Instance.GetGemsAmount());
-    }
+    public void OnUnityAdsShowStart(string placementId) { }
 
     public void OnUnityAdsShowClick(string placementId) { }
 

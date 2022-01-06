@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -27,7 +25,7 @@ public class GameManager : MonoBehaviour
     public void AddGems(int amount)
     {
         _gems += amount;
-        UIManager.Instance.UpdateGemCount(Gems);
+        UIManager.Instance.UpdateGemCount(_gems);
     }
 
     public void SubGems(int amount) => _gems -= amount;

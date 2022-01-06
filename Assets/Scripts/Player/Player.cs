@@ -1,43 +1,41 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int            health              = 4;
-    [SerializeField] private float          _speed              = 4f;
-    [SerializeField] private float          _jumpHeight         = 10f;
-    [SerializeField] private bool           _isJumping          = false;
-    [SerializeField] private float          timeBetweenAttack   = 1f;
+    [SerializeField] private int _health                = 4;
+    [SerializeField] private float _speed               = 4f;
+    [SerializeField] private float _jumpHeight          = 10f;
+    [SerializeField] private bool _isJumping            = false;
+    [SerializeField] private float _timeBetweenAttack   = 1f;
     private bool _enableJump    = false;
     private bool _isGrounded;
     private bool _isAttacking   = false;
     private bool _onHit         = false;
     private bool _isDead        = false;
     private Rigidbody2D _rb2D;
-    private SpriteRenderer _sprite;
-    private SpriteRenderer _swordArcSprite;
-    private Animator _swordArcAnim;
     private Grounding _grounding;
     private PlayerAnimation _anim;
 
-    public int Health { get => health; set => health = value; }
+    public int Health { get => _health; set => _health = value; }
 
     private void Awake()
     {
         _rb2D = GetComponent<Rigidbody2D>();
         _grounding = GetComponent<Grounding>();
         _anim = GetComponent<PlayerAnimation>();
-        _sprite = GetComponentInChildren<SpriteRenderer>();
-        _swordArcSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
-        _swordArcAnim = transform.GetChild(1).GetComponent<Animator>();
     }
 
     private void Update()
     {
         _isGrounded = _grounding.IsGrounded();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UIManager.Instance.PauseMenu();
+        }
+
         if (_isDead) return;
         if (_anim.OnHitState()) return;
 
@@ -117,19 +115,19 @@ public class Player : MonoBehaviour, IDamageable
     {
         _isAttacking = true;
         _anim.Attack();
-        yield return new WaitForSeconds(timeBetweenAttack);
+        yield return new WaitForSeconds(_timeBetweenAttack);
         _isAttacking = false;
     }
 
     public void OnDamage(int amount)
     {
         if (_isDead) return;
-        health -= amount;
-        UIManager.Instance.UpdateLives(health);
+        _health -= amount;
+        UIManager.Instance.UpdateLives(_health);
         _onHit = true;
         _anim.Hit();
 
-        if(health <= 0)
+        if(_health <= 0)
         {
             //Game over
             _anim.Death();

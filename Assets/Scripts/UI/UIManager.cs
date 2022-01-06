@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,19 +13,21 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private Text gemCountDisplay;
-    [SerializeField] private Text keyAmount;
-    [SerializeField] private Text bootsAmount;
-    [SerializeField] private Text flameSwordAmount;
-    [SerializeField] private Text playerGemAmount;
-    [SerializeField] private Image selectionIMG;
-    [SerializeField] private Image aButton;
-    [SerializeField] private Image bButton;
-    [SerializeField] private Image joyStick;
-    [SerializeField] private GameObject selectionGO;
-    [SerializeField] private GameObject uiShop;
-    [SerializeField] private GameObject hudGO;
-    [SerializeField] private Image[] healthBars = new Image[4];
+    [SerializeField] private Text           gemCountDisplay;
+    [SerializeField] private Text           keyAmount;
+    [SerializeField] private Text           bootsAmount;
+    [SerializeField] private Text           flameSwordAmount;
+    [SerializeField] private Text           playerGemAmount;
+    [SerializeField] private Image          selectionIMG;
+    [SerializeField] private Image          aButton;
+    [SerializeField] private Image          bButton;
+    [SerializeField] private Image          joyStick;
+    [SerializeField] private GameObject     selectionGO;
+    [SerializeField] private GameObject     uiShop;
+    [SerializeField] private GameObject     hudGO;
+    [SerializeField] private GameObject     pauseMenu;
+    [SerializeField] private Image[]        healthBars = new Image[4];
+    private bool _pause = false;
 
     private void Awake()
     {
@@ -78,7 +78,26 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void DisableSelectionGO() => selectionGO.SetActive(false);
-    public void EnableHUD(bool value) => hudGO.SetActive(value);
+    public void PauseMenu()
+    {
+        _pause = !_pause;
+        if (_pause)
+        {
+            pauseMenu.SetActive(true);
+            hudGO.SetActive(false);
+            aButton.enabled = false;
+            bButton.enabled = false;
+            joyStick.enabled = false;
+        }
+        else
+        {
+            pauseMenu.SetActive(false);
+            hudGO.SetActive(true);
+            aButton.enabled = true;
+            bButton.enabled = true;
+            joyStick.enabled = true;
+        }
+    }
+
     public void EnableShop(bool value) => uiShop.SetActive(value);
 }

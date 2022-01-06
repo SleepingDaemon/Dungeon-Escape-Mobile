@@ -1,13 +1,11 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spider : Enemy
 {
-    [SerializeField] private GameObject acidPrefab;
-    [SerializeField] private Transform _firePoint;
-    [SerializeField] private float waitTimeBeforeAttack;
+    [SerializeField] private GameObject     acidPrefab;
+    [SerializeField] private Transform      _firePoint;
+    [SerializeField] private float          waitTimeBeforeAttack;
 
     public override void InitData()
     {
@@ -31,7 +29,6 @@ public class Spider : Enemy
         {
             enemyAnim.SetTrigger("dead");
             DropLoot();
-            //Destroy(this.gameObject, 3f);
         }
     }
 

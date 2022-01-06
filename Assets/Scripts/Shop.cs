@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    [SerializeField] private int flameSwordCost = 200;
-    [SerializeField] private int bootsOfFlightCost = 400;
-    [SerializeField] private int keyToCastleCost = 100;
+    [SerializeField] private int flameSwordCost     = 200;
+    [SerializeField] private int bootsOfFlightCost  = 400;
+    [SerializeField] private int keyToCastleCost    = 100;
     private int _currentItemCost;
     private int _currentSelectedItem;
     private Player _player;

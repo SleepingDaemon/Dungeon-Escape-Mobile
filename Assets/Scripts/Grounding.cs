@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Grounding : MonoBehaviour
 {
-    [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private float _groundCheckDistance;
-    [SerializeField] private bool _isGrounded;
+    [SerializeField] private LayerMask  _layerMask;
+    [SerializeField] private float      _groundCheckDistance;
+    [SerializeField] private bool       _isGrounded;
 
     private void Update()
     {

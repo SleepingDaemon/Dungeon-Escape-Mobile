@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDamageable
 {
-    [SerializeField] protected int health;
-    [SerializeField] protected float speed;
-    [SerializeField] protected int gems;
-    [SerializeField] protected Transform pointA, pointB;
-    [SerializeField] protected GameObject gemPrefab;
+    [SerializeField] protected int          health;
+    [SerializeField] protected float        speed;
+    [SerializeField] protected int          gems;
+    [SerializeField] protected Transform    pointA, pointB;
+    [SerializeField] protected GameObject   gemPrefab;
 
     protected bool isHit = false;
     protected bool isDead = false;
@@ -107,7 +105,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         if (isDead) return;
         health -= amount;
-
         enemyAnim.SetTrigger("hit");
         isHit = true;
         enemyAnim.SetBool("inCombat", true);
@@ -117,7 +114,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             isDead = true;
             enemyAnim.SetTrigger("dead");
             DropLoot();
-            //Destroy(this.gameObject, 3f);
         }
     }
 
