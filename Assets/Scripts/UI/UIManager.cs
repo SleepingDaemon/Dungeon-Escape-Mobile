@@ -26,8 +26,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject     uiShop;
     [SerializeField] private GameObject     hudGO;
     [SerializeField] private GameObject     pauseMenu;
+    [SerializeField] private GameObject     gameOverMenu;
+    [SerializeField] private GameObject     gameWon;
     [SerializeField] private Image[]        healthBars = new Image[4];
     private bool _pause = false;
+
+    public bool Pause { get => _pause; set => _pause = value; }
 
     private void Awake()
     {
@@ -81,8 +85,10 @@ public class UIManager : MonoBehaviour
     public void PauseMenu()
     {
         _pause = !_pause;
+
         if (_pause)
         {
+            GameManager.Instance.PauseGame(true);
             pauseMenu.SetActive(true);
             hudGO.SetActive(false);
             aButton.enabled = false;
@@ -91,12 +97,23 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            GameManager.Instance.PauseGame(false);
             pauseMenu.SetActive(false);
             hudGO.SetActive(true);
             aButton.enabled = true;
             bButton.enabled = true;
             joyStick.enabled = true;
         }
+    }
+
+    public void GameOverUI()
+    {
+        gameOverMenu.SetActive(true);
+    }
+
+    public void GameWonUI()
+    {
+        gameWon.SetActive(true);
     }
 
     public void EnableShop(bool value) => uiShop.SetActive(value);

@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Player _player;
     [SerializeField] private int _gems = 0;
+    [SerializeField] private bool _hasKey = false;
+    [SerializeField] private bool _hasBoots = false;
     private static GameManager _instance;
     public static GameManager Instance
     {
@@ -14,12 +17,32 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
-    public bool HasKeyToCastle { get; set; }
+
+    public bool HasKeyToCastle { get => _hasKey; set => _hasKey = value; }
+    public bool HasBootsOfFlight { get => _hasBoots; set => _hasBoots = value; }
     public int Gems { get => _gems; set => _gems = value; }
 
     private void Awake()
     {
         _instance = this;
+    }
+
+    public void PauseGame(bool value)
+    {
+        if (value == true)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
+
+    public void GameOver()
+    {
+        UIManager.Instance.GameOverUI();
+    }
+
+    public void GameWon()
+    {
+        UIManager.Instance.GameWonUI();
     }
 
     public void AddGems(int amount)

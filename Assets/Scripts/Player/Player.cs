@@ -8,8 +8,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _speed               = 4f;
     [SerializeField] private float _jumpHeight          = 10f;
     [SerializeField] private bool _isJumping            = false;
+    [SerializeField] private bool _canDoubleJump        = false;
     [SerializeField] private float _timeBetweenAttack   = 1f;
-    private bool _enableJump    = false;
+    private bool _isJumpPressed = false;
     private bool _isGrounded;
     private bool _isAttacking   = false;
     private bool _onHit         = false;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour, IDamageable
     private Rigidbody2D _rb2D;
     private Grounding _grounding;
     private PlayerAnimation _anim;
+    private float yVelocity;
 
     public int Health { get => _health; set => _health = value; }
 
@@ -39,10 +41,7 @@ public class Player : MonoBehaviour, IDamageable
         if (_isDead) return;
         if (_anim.OnHitState()) return;
 
-        if (Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Jump") && _isGrounded)
-        {
-            _enableJump = true;
-        }
+        _isJumpPressed = Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Jump");
 
         if (CrossPlatformInputManager.GetButtonDown("Attack") && _isGrounded && !_isAttacking)
         {
@@ -66,18 +65,38 @@ public class Player : MonoBehaviour, IDamageable
         FlipSpritesOnMoveDirection(xMove);
 
         if (_isGrounded)
-        { 
-            HandleJumping();
-        }
+        {
+            _isJumping = false;
+            _anim.Jump(false);
 
-        if (!_isGrounded)
+            //HandleJumping();
+            if (_isJumpPressed)
+            {
+                _rb2D.velocity = new Vector3(_rb2D.velocity.x, _jumpHeight);
+                _canDoubleJump = true;
+                //_isJumpPressed = false;
+            }
+        }
+        else
         {
             _isJumping = true;
+
+            //HandleDoubleJumping();
+            if (_isJumpPressed && _canDoubleJump && GameManager.Instance.HasBootsOfFlight)
+            {
+                _rb2D.velocity = new Vector3(_rb2D.velocity.x, _jumpHeight, 0);
+                _canDoubleJump = false;
+                _isJumpPressed = false;
+            }
+
             _anim.Jump(true);
         }
 
-        if(!_onHit)
+        if (!_onHit)
+        {
             _rb2D.velocity = new Vector3(xMove * _speed, _rb2D.velocity.y, 0);
+        }
+
         _anim.Move(xMove);
     }
 
@@ -99,14 +118,12 @@ public class Player : MonoBehaviour, IDamageable
 
     private void HandleJumping()
     {
-        _isJumping = false;
-        _anim.Jump(false);
 
-        if (_enableJump)
-        {
-            _rb2D.velocity = new Vector3(_rb2D.velocity.x, _jumpHeight);
-            _enableJump = false;
-        }
+    }
+
+    private void HandleDoubleJumping()
+    {
+
     }
 
     public Rigidbody2D GetRigidBody() => _rb2D;
@@ -132,6 +149,7 @@ public class Player : MonoBehaviour, IDamageable
             //Game over
             _anim.Death();
             _isDead = true;
+            GameManager.Instance.GameOver();
         }
     }
 
