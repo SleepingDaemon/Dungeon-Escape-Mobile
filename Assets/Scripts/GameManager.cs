@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Cinemachine;
 
-public enum GameState { NONE, INTRO, ACTIVE, GAMEOVER, PAUSE, COMPLETE, }
+public enum GameState { NONE, INTRO, ACTIVE, GAMEOVER, PAUSE, COMPLETE, SHOP }
 
 public class GameManager : MonoBehaviour
 {
@@ -14,10 +14,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioSource _source = null;
     [SerializeField] private AudioClip _gameWon;
     [SerializeField] private AudioClip _gameLost;
+    [SerializeField] private Animator topBorder;
+    [SerializeField] private Animator bottomBorder;
+    [SerializeField] private Animator introText;
+    [SerializeField] private Animator outroText;
+    [SerializeField] private Animator findKey;
     [SerializeField] private int _gems;
     [SerializeField] private bool _hasKey = false;
     [SerializeField] private bool _hasBoots = false;
     [SerializeField] private bool _hasFlameSword = false;
+    [SerializeField] private bool _enableIntro;
+    [SerializeField] private GameObject menuOptions;
+    [SerializeField] private GameObject bgFadeIn;
+
     private static GameManager _instance;
     public static GameManager Instance
     {
@@ -47,7 +56,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _state = SetGameState(GameState.INTRO);
+        if(_enableIntro)
+            _state = SetGameState(GameState.INTRO);
     }
 
     private void Update()
@@ -58,7 +68,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private GameState SetGameState(GameState state)
+    public void FindKey(bool value)
+    {
+        findKey.gameObject.SetActive(value);
+    }
+
+    public GameState SetGameState(GameState state)
     {
         _state = state;
         return _state;
@@ -67,9 +82,15 @@ public class GameManager : MonoBehaviour
     public void PauseGame(bool value)
     {
         if (value == true)
+        {
+            _state = SetGameState(GameState.PAUSE);
             Time.timeScale = 0;
+        }
         else
+        {
+            _state = SetGameState(GameState.ACTIVE);
             Time.timeScale = 1;
+        }
     }
 
     public void GameOver()
@@ -79,10 +100,14 @@ public class GameManager : MonoBehaviour
 
     public void GameWon()
     {
+        _state = SetGameState(GameState.COMPLETE);
+        UIManager.Instance.EnableHUD(false);
+        SetAnimatedGameObjectBorders(true);
         AudioManager.Instance.MusicSource.Stop();
         AudioManager.Instance.PlaySound(_source, _gameWon);
-        UIManager.Instance.GameWonUI();
-        Time.timeScale = 0;
+        outroText.gameObject.SetActive(true);
+        StartCoroutine(AcitivateMenuOptionsRoutine());
+        //Time.timeScale = 0;
     }
 
     public void AddGems(int amount)
@@ -93,6 +118,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GameOverScreenRoutine()
     {
+        _state = SetGameState(GameState.GAMEOVER);
         _camera.enabled = false;
         AudioManager.Instance.MusicSource.Stop();
         AudioManager.Instance.PlaySound(_source, _gameLost);
@@ -111,11 +137,42 @@ public class GameManager : MonoBehaviour
     IEnumerator IntroRoutine()
     {
         UIManager.Instance.EnableHUD(false);
+        topBorder.gameObject.SetActive(true);
+        bottomBorder.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        introText.gameObject.SetActive(true);
         yield return new WaitForSeconds(_delayIntro);
-        UIManager.Instance.TriggerIntroBorders();
+        TriggerAnimatedGOBorders();
+        TriggerIntroText();
         _state = SetGameState(GameState.ACTIVE);
         UIManager.Instance.EnableHUD(true);
+        yield return new WaitForSeconds(5f);
+        SetAnimatedGameObjectBorders(false);
     }
 
     public GameState GetGameState() => _state;
+    public void TriggerAnimatedGOBorders()
+    {
+        topBorder.SetTrigger("goUP");
+        bottomBorder.SetTrigger("goDown");
+    }
+
+    public void TriggerIntroText()
+    {
+        introText.SetTrigger("fadeOut");
+    }
+
+    public void SetAnimatedGameObjectBorders(bool value)
+    {
+        topBorder.gameObject.SetActive(value);
+        bottomBorder.gameObject.SetActive(value);
+    }
+
+    IEnumerator AcitivateMenuOptionsRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        bgFadeIn.SetActive(true);
+        outroText.gameObject.SetActive(false);
+        menuOptions.SetActive(true);
+    }
 }

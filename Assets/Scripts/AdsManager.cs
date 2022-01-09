@@ -29,11 +29,19 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
 #endif
     }
 
+    public void LoadRewardedAd()
+    {
+        Debug.Log("Ad Loaded: " + _adUnitId);
+
+        if (Advertisement.isInitialized)
+            Advertisement.Load(_adUnitId, this);
+    }
+
     public void ShowRewardedAd()
     {
         Debug.Log("Showing rewarded ad");
-        if(Advertisement.isInitialized)
-            Advertisement.Show(_adUnitId, this);
+        //_showAdButton.interactable = true;
+        Advertisement.Show(_adUnitId);
     }
 
     public void InitializeAds()
@@ -61,6 +69,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         if (adUnitId.Equals(_adUnitId))
         {
             _showAdButton.onClick.AddListener(ShowRewardedAd);
+            _showAdButton.interactable = true;
         }
     }
 
@@ -80,17 +89,17 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
 
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        if(adUnitId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.COMPLETED))
+        if(adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.COMPLETED))
         {
             Debug.Log("You Finished the ad. You receive 100G!");
             GameManager.Instance.AddGems(100);
             UIManager.Instance.UpdateShopGemCount(GameManager.Instance.GetGemsAmount());
         }
-        else if(adUnitId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.SKIPPED))
+        else if(adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.SKIPPED))
         {
             Debug.Log("You skipped the ad");
         }
-        else if(adUnitId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.UNKNOWN))
+        else if(adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.UNKNOWN))
         {
             Debug.Log("Couldn't show ad for Unknown reasons");
         }

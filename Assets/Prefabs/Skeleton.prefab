@@ -340,6 +340,11 @@ MonoBehaviour:
   pointA: {fileID: 4416928432083925427}
   pointB: {fileID: 4416928432586903448}
   gemPrefab: {fileID: 8685249164836656535, guid: 96e8557e3d148134383c4157905cecc9, type: 3}
+  isDead: 0
+  _minMinutesForRevival: 30
+  _maxMinutesForRevival: 90
+  _randomTime: 0
+  _revive: 0
 --- !u!61 &4416928432708526108
 BoxCollider2D:
   m_ObjectHideFlags: 0

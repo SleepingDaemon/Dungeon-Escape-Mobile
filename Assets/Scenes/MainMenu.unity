@@ -1498,14 +1498,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1231175678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 695851f329ff42b4d96b2d767da59b22, type: 3}
+  m_Script: {fileID: 11500000, guid: ad1a469a6f0af1a42bf359ca9aa76bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _source: {fileID: 761791038}
   _hoverButton: {fileID: 8300000, guid: 9a6dc0dbba8874c7c86062a166792d34, type: 3}
   _clickButton: {fileID: 8300000, guid: 24cb67fc3ce0b4435a73b79d1df47a2f, type: 3}
-  _start: {fileID: 0}
-  _quit: {fileID: 1918752754}
 --- !u!1 &1377194502
 GameObject:
   m_ObjectHideFlags: 0

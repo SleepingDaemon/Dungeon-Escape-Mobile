@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -13,12 +14,28 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    [Header("HUD Gem Count Text")]
     [SerializeField] private Text           gemCountDisplay;
+
+    [Header("Shop Item Cost Text")]
     [SerializeField] private Text           keyAmount;
     [SerializeField] private Text           bootsAmount;
     [SerializeField] private Text           flameSwordAmount;
     [SerializeField] private Text           healthPotionAmount;
+    public Text KeyAmount { get => keyAmount; set => keyAmount = value; }
+    public Text BootsAmount { get => bootsAmount; set => bootsAmount = value; }
+    public Text FlameSwordAmount { get => flameSwordAmount; set => flameSwordAmount = value; }
+
+    [Header("Shop Player Gem Count Text")]
     [SerializeField] private Text           playerGemAmount;
+
+    [Header("Shop Item Names")]
+    [SerializeField] private Text           flameSword;
+    [SerializeField] private Text           bootsOfFlight;
+    [SerializeField] private Text           keyToCastle;
+    [SerializeField] private Text           healthPotion;
+
+    [Header("Misc")]
     [SerializeField] private Image          selectionIMG;
     [SerializeField] private Image          aButton;
     [SerializeField] private Image          bButton;
@@ -30,8 +47,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject     gameOverMenu;
     [SerializeField] private GameObject     gameWon;
     [SerializeField] private Image[]        healthBars = new Image[4];
-    [SerializeField] private Animator       topBorder;
-    [SerializeField] private Animator       bottomBorder;
     private bool _pause = false;
 
     public bool Pause { get => _pause; set => _pause = value; }
@@ -41,14 +56,11 @@ public class UIManager : MonoBehaviour
         _instance = this;
     }
 
-    public void OpenShop(int gemCount, int key, int boot, int flamesword, int potion)
+    public void OpenShop(int gemCount)
     {
+        GameManager.Instance.SetGameState(GameState.SHOP);
         EnableHUD(false);
-        playerGemAmount.text = gemCount.ToString() + "G";
-        flameSwordAmount.text = flamesword.ToString() + "G";
-        bootsAmount.text = boot.ToString() + "G";
-        keyAmount.text = key.ToString() + "G";
-        healthPotionAmount.text = potion.ToString() + "G";
+        playerGemAmount.text = gemCount + "G";
     }
 
     public void CloseShop()
@@ -57,6 +69,7 @@ public class UIManager : MonoBehaviour
         selectionGO.SetActive(false);
         EnableHUD(true);
         gemCountDisplay.text = GameManager.Instance.GetGemsAmount().ToString() + "G";
+        GameManager.Instance.SetGameState(GameState.ACTIVE);
     }
 
     public void UpdateShopSelection(float yPos)
@@ -118,7 +131,11 @@ public class UIManager : MonoBehaviour
         gameWon.SetActive(true);
     }
 
-    public void EnableShop(bool value) => uiShop.SetActive(value);
+    public void EnableShop(bool value)
+    {
+        uiShop.SetActive(value);
+
+    }
     public void EnableHUD(bool value)
     {
         hudGO.SetActive(value);
@@ -127,9 +144,34 @@ public class UIManager : MonoBehaviour
         joyStick.enabled = value;
     }
 
-    public void TriggerIntroBorders()
+    public void ChangeItemTextColor(int selection, Color color)
     {
-        topBorder.SetTrigger("goUP");
-        bottomBorder.SetTrigger("goDown");
+        switch (selection)
+        {
+            case 0:
+                flameSword.color = color;
+                break;
+            case 1:
+                bootsOfFlight.color = color;
+                break;
+            case 2:
+                keyToCastle.color = color;
+                break;
+            //case 3:
+            //    healthPotion.color = color;
+            //    break;
+        }
+    }
+
+    public void ChangeItemPriceText(int selection)
+    {
+        if (selection == 0)
+            FlameSwordAmount.text = "--SOLD---";
+        if (selection == 1)
+            BootsAmount.text = "--SOLD---";
+        if (selection == 2)
+            KeyAmount.text = "--SOLD---";
+        //if (selection == 3)
+        //    healthPotionAmount.text = "--SOLD--";
     }
 }

@@ -177,6 +177,7 @@ MonoBehaviour:
   pointA: {fileID: 8958165331605650375}
   pointB: {fileID: 8958165331207985111}
   gemPrefab: {fileID: 8685249164836656535, guid: 96e8557e3d148134383c4157905cecc9, type: 3}
+  isDead: 0
   acidPrefab: {fileID: 1528360116033048960, guid: 1dccaf1ebd6c4e24087d90b9a3c610d6, type: 3}
   _firePoint: {fileID: 8958165332190672761}
   waitTimeBeforeAttack: 1.25
@@ -428,7 +429,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8958165332829903801}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e448ed948696134384c847103fe4175, type: 3}
+  m_Script: {fileID: 11500000, guid: 730e6a7123892174d89418450ce98a75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1511233975

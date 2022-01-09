@@ -9,7 +9,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [SerializeField] protected GameObject   gemPrefab;
 
     protected bool isHit = false;
-    protected bool isDead = false;
+    [SerializeField] protected bool isDead = false;
     protected Collider2D col;
     protected Animator enemyAnim;
     protected SpriteRenderer enemySprite;
@@ -78,7 +78,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         //Resume back to walking when not in combat
         var _distance = Vector3.Distance(player.transform.position, transform.position);
-        if (_distance > 2 || player.IsPlayerDead())
+        if (_distance > 2.5 || player.IsPlayerDead())
         {
             isHit = false;
             if (enemyAnim != null)
@@ -115,6 +115,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         {
             isDead = true;
             enemyAnim.SetTrigger("dead");
+            enemyAnim.SetBool("inCombat", false);
             DropLoot();
             col.enabled = false;
         }
@@ -125,5 +126,13 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         var gemsGO = Instantiate(gemPrefab, transform.position, Quaternion.identity) as GameObject;
         var gemScript = gemsGO.GetComponent<Gem>();
         gemScript.SetGemAmount(gems);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            OnDamage(1);
+        }
     }
 }

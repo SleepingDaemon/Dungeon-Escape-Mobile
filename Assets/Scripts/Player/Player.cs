@@ -13,7 +13,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private bool _enableDoubleJump     = false;
     [SerializeField] private float _timeBetweenAttack   = 1f;
 
-    private bool _canMove       = false;
     private bool _isGrounded;
     private bool _isAttacking   = false;
     private bool _onHit         = false;
@@ -22,8 +21,6 @@ public class Player : MonoBehaviour, IDamageable
     private Grounding _grounding;
     private CharacterAudioHelper _audio;
     private PlayerAnimation _anim;
-    
-    private Vector3 _velocity;
     private float xMove;
 
     public int Health { get => _health; set => _health = value; }
@@ -36,11 +33,6 @@ public class Player : MonoBehaviour, IDamageable
         _audio = GetComponentInChildren<CharacterAudioHelper>();
     }
 
-    private void Start()
-    {
-
-    }
-
     private void Update()
     {
         if (_isDead) return;
@@ -49,10 +41,18 @@ public class Player : MonoBehaviour, IDamageable
         _isGrounded = _grounding.IsGrounded();
         _anim.IsGrounded(_isGrounded);
 
-        if (_isAttacking || _onHit || _isDead || GameManager.Instance.GetGameState() == GameState.INTRO)
+        if (_isAttacking || _onHit || _isDead || GameManager.Instance.GetGameState() == GameState.INTRO
+                                              || GameManager.Instance.GetGameState() == GameState.SHOP
+                                              || GameManager.Instance.GetGameState() == GameState.COMPLETE
+                                              || GameManager.Instance.GetGameState() == GameState.PAUSE)
         {
             _onHit = false;
-            _rb2D.velocity = Vector2.zero;
+            if(_rb2D.velocity != Vector2.zero)
+            {
+                _rb2D.velocity = Vector2.zero;
+                _anim.Move(0);
+            }
+
             return;
         }
 
@@ -97,7 +97,10 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
 
-        if (!_onHit && GameManager.Instance.GetGameState() != GameState.INTRO)
+        if (!_onHit && GameManager.Instance.GetGameState() != GameState.INTRO
+                    || GameManager.Instance.GetGameState() != GameState.SHOP
+                    || GameManager.Instance.GetGameState() == GameState.COMPLETE
+                    || GameManager.Instance.GetGameState() == GameState.PAUSE)
         {
             Move(xMove);
             _anim.Move(xMove);

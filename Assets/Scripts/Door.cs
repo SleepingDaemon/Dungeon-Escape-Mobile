@@ -12,6 +12,18 @@ public class Door : MonoBehaviour
             {
                 GameManager.Instance.GameWon();
             }
+            else
+            {
+                GameManager.Instance.FindKey(true);
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            GameManager.Instance.FindKey(false);
         }
     }
 }
