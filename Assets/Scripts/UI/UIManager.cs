@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text           keyAmount;
     [SerializeField] private Text           bootsAmount;
     [SerializeField] private Text           flameSwordAmount;
+    [SerializeField] private Text           healthPotionAmount;
     [SerializeField] private Text           playerGemAmount;
     [SerializeField] private Image          selectionIMG;
     [SerializeField] private Image          aButton;
@@ -29,6 +30,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject     gameOverMenu;
     [SerializeField] private GameObject     gameWon;
     [SerializeField] private Image[]        healthBars = new Image[4];
+    [SerializeField] private Animator       topBorder;
+    [SerializeField] private Animator       bottomBorder;
     private bool _pause = false;
 
     public bool Pause { get => _pause; set => _pause = value; }
@@ -38,26 +41,22 @@ public class UIManager : MonoBehaviour
         _instance = this;
     }
 
-    public void OpenShop(int gemCount, int key, int boot, int flamesword)
+    public void OpenShop(int gemCount, int key, int boot, int flamesword, int potion)
     {
-        hudGO.SetActive(false);
-        aButton.enabled = false;
-        bButton.enabled = false;
-        joyStick.enabled = false;
+        EnableHUD(false);
         playerGemAmount.text = gemCount.ToString() + "G";
         flameSwordAmount.text = flamesword.ToString() + "G";
         bootsAmount.text = boot.ToString() + "G";
         keyAmount.text = key.ToString() + "G";
+        healthPotionAmount.text = potion.ToString() + "G";
     }
 
     public void CloseShop()
     {
         uiShop.SetActive(false);
         selectionGO.SetActive(false);
-        hudGO.SetActive(true);
-        aButton.enabled = true;
-        bButton.enabled = true;
-        joyStick.enabled = true;
+        EnableHUD(true);
+        gemCountDisplay.text = GameManager.Instance.GetGemsAmount().ToString() + "G";
     }
 
     public void UpdateShopSelection(float yPos)
@@ -75,9 +74,18 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int livesRemaining)
     {
+        if(livesRemaining == 4)
+        {
+            healthBars[0].enabled = true;
+            healthBars[1].enabled = true;
+            healthBars[2].enabled = true;
+            healthBars[3].enabled = true;
+            return;
+        }
+
         for (int i = 0; i <= livesRemaining; i++)
         {
-            if(i == livesRemaining)
+            if (i == livesRemaining)
                 healthBars[i].enabled = false;
         }
     }
@@ -90,19 +98,13 @@ public class UIManager : MonoBehaviour
         {
             GameManager.Instance.PauseGame(true);
             pauseMenu.SetActive(true);
-            hudGO.SetActive(false);
-            aButton.enabled = false;
-            bButton.enabled = false;
-            joyStick.enabled = false;
+            EnableHUD(false);
         }
         else
         {
             GameManager.Instance.PauseGame(false);
             pauseMenu.SetActive(false);
-            hudGO.SetActive(true);
-            aButton.enabled = true;
-            bButton.enabled = true;
-            joyStick.enabled = true;
+            EnableHUD(true);
         }
     }
 
@@ -117,4 +119,17 @@ public class UIManager : MonoBehaviour
     }
 
     public void EnableShop(bool value) => uiShop.SetActive(value);
+    public void EnableHUD(bool value)
+    {
+        hudGO.SetActive(value);
+        aButton.enabled = value;
+        bButton.enabled = value;
+        joyStick.enabled = value;
+    }
+
+    public void TriggerIntroBorders()
+    {
+        topBorder.SetTrigger("goUP");
+        bottomBorder.SetTrigger("goDown");
+    }
 }

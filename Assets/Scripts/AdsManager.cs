@@ -6,24 +6,42 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
 {
     [SerializeField] private Button     _showAdButton;
     [SerializeField] private string     _androidGameId;
-    [SerializeField] private string     _androidAdUnitId = "Rewarded_Android";
+    [SerializeField] private string     _iOSGameId;
+    [SerializeField] private string     _androidAdUnitId;
+    [SerializeField] private string     _iOsAdUnitId;
     [SerializeField] private bool       _testMode = true;
+    private string _gameId;
+    private string _adUnitId;
 
     private void Awake()
     {
         InitializeAds();
     }
 
+    private void Start()
+    {
+        // Get the Ad Unit ID for the current platform:
+        _adUnitId = null; // This will remain null for unsupported platforms
+#if UNITY_IOS
+        _adUnitId = _iOsAdUnitId;
+#elif UNITY_ANDROID
+		_adUnitId = _androidAdUnitId;
+#endif
+    }
+
     public void ShowRewardedAd()
     {
         Debug.Log("Showing rewarded ad");
         if(Advertisement.isInitialized)
-            Advertisement.Show(_androidAdUnitId, this);
+            Advertisement.Show(_adUnitId, this);
     }
 
     public void InitializeAds()
     {
-        Advertisement.Initialize(_androidGameId, _testMode, this);
+        _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
+            ? _iOSGameId
+            : _androidGameId;
+        Advertisement.Initialize(_gameId, _testMode, this);
     }
 
     public void OnInitializationComplete()
@@ -36,41 +54,43 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         Debug.Log($"Unity Ads Initialization Failed: {error} - {message}");
     }
 
-    public void OnUnityAdsAdLoaded(string placementId)
+    public void OnUnityAdsAdLoaded(string adUnitId)
     {
-        if (_androidAdUnitId.Equals(_androidAdUnitId))
+        Debug.Log("Ad Loaded: " + adUnitId);
+
+        if (adUnitId.Equals(_adUnitId))
         {
             _showAdButton.onClick.AddListener(ShowRewardedAd);
         }
     }
 
-    public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
+    public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
     {
-        Debug.Log($"Error loading Ad Unit: {_androidAdUnitId} - {error} - {message}");
+        Debug.Log($"Error loading Ad Unit: {adUnitId} - {error} - {message}");
     }
 
-    public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
+    public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
     {
-        Debug.Log($"Error showing Ad Unit {_androidAdUnitId}: {error} - {message}");
+        Debug.Log($"Error showing Ad Unit {adUnitId}: {error} - {message}");
     }
 
     public void OnUnityAdsShowStart(string placementId) { }
 
     public void OnUnityAdsShowClick(string placementId) { }
 
-    public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
+    public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        if(_androidAdUnitId.Equals(_androidAdUnitId) && showCompletionState.Equals(UnityAdsCompletionState.COMPLETED))
+        if(adUnitId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.COMPLETED))
         {
             Debug.Log("You Finished the ad. You receive 100G!");
             GameManager.Instance.AddGems(100);
             UIManager.Instance.UpdateShopGemCount(GameManager.Instance.GetGemsAmount());
         }
-        else if(_androidAdUnitId.Equals(_androidAdUnitId) && showCompletionState.Equals(UnityAdsCompletionState.SKIPPED))
+        else if(adUnitId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.SKIPPED))
         {
             Debug.Log("You skipped the ad");
         }
-        else if(_androidAdUnitId.Equals(_androidAdUnitId) && showCompletionState.Equals(UnityAdsCompletionState.UNKNOWN))
+        else if(adUnitId.Equals(adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.UNKNOWN))
         {
             Debug.Log("Couldn't show ad for Unknown reasons");
         }

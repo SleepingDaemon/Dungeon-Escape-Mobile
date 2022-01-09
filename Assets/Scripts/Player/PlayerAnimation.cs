@@ -21,10 +21,24 @@ public class PlayerAnimation : MonoBehaviour
         _anim.SetBool("isJumping", isJumping);
     }
 
+    public void DoubleJump(bool isJumping)
+    {
+        _anim.SetBool("isDoubleJumping", isJumping);
+    }
+
+    public void IsGrounded(bool isGrounded)
+    {
+        _anim.SetBool("isGrounded", isGrounded);
+    }
+
     public void Attack()
     {
         _anim.SetTrigger("attack");
-        _swordAnim.SetTrigger("swordAnimation");
+        if (GameManager.Instance.HasFlameSword)
+        {
+            _anim.SetBool("flameSword", true);
+            _swordAnim.SetTrigger("swordAnimation");
+        }
     }
 
     public void Death()

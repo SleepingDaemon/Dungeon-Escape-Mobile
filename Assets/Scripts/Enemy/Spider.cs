@@ -29,6 +29,7 @@ public class Spider : Enemy
         {
             enemyAnim.SetTrigger("dead");
             DropLoot();
+            col.enabled = false;
         }
     }
 

@@ -10,6 +10,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     protected bool isHit = false;
     protected bool isDead = false;
+    protected Collider2D col;
     protected Animator enemyAnim;
     protected SpriteRenderer enemySprite;
     protected Vector3 currentTarget;
@@ -41,6 +42,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         enemyAnim = GetComponentInChildren<Animator>();
         enemySprite = GetComponentInChildren<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
         player = GameObject.Find("Player").GetComponent<Player>();
     }
 
@@ -114,6 +116,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             isDead = true;
             enemyAnim.SetTrigger("dead");
             DropLoot();
+            col.enabled = false;
         }
     }
 
