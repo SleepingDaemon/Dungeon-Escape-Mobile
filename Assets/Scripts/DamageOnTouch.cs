@@ -8,9 +8,19 @@ public class DamageOnTouch : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            IDamageable hit = other.GetComponent<IDamageable>();
-            if (hit != null)
-                hit.OnDamage(_damageAmount);
+            Player player = other.GetComponent<Player>();
+            Enemy enemy = this.GetComponent<Enemy>();
+            if (player != null)
+            {
+                if(enemy != null)
+                {
+                    player.OnDamage(_damageAmount);
+                }
+                else
+                {
+                    player.InstantDeath();
+                }
+            }
         }
     }
 }

@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    [SerializeField] private int flameSwordCost;
-    [SerializeField] private int bootsOfFlightCost;
-    [SerializeField] private int keyToCastleCost;
-    [SerializeField] private int healthPotionCost;
-    [SerializeField] private AudioSource _source;
-    [SerializeField] private AudioClip _selectSound;
-    [SerializeField] private AudioClip _purchaseSound;
-    [SerializeField] private AudioClip _healthPotion;
-    [SerializeField] private AudioClip _keySound;
+    [SerializeField] private int            flameSwordCost;
+    [SerializeField] private int            bootsOfFlightCost;
+    [SerializeField] private int            keyToCastleCost;
+    [SerializeField] private int            healthPotionCost;
+    [SerializeField] private AudioSource    _source;
+    [SerializeField] private AudioClip      _selectSound;
+    [SerializeField] private AudioClip      _purchaseSound;
+    [SerializeField] private AudioClip      _healthPotion;
+    [SerializeField] private AudioClip      _keySound;
+
     private int _currentItemCost;
     private int _currentSelectedItem;
     private Player _player;
@@ -23,11 +24,15 @@ public class Shop : MonoBehaviour
             if(_player != null)
             {
                 UIManager.Instance.OpenShop(GameManager.Instance.GetGemsAmount());
-                //UIManager.Instance.UpdateShopItemCostText(flameSwordCost, bootsOfFlightCost, keyToCastleCost, healthPotionCost);
             }
 
             UIManager.Instance.EnableShop(true);
         }
+    }
+
+    private void Awake()
+    {
+        _player = FindObjectOfType<Player>();
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -97,8 +102,7 @@ public class Shop : MonoBehaviour
 
             if (_currentSelectedItem == 3)
             {
-                if(_player != null)
-                    _player.AddHealth(4);
+                _player.AddHealth(4);
                 AudioManager.Instance.PlaySound(_source, _healthPotion);
                 OnPurchase();
             }

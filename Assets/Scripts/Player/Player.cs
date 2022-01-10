@@ -4,24 +4,24 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int _health                = 4;
-    [SerializeField] private float _speed               = 4f;
-    [SerializeField] private float _jumpHeight          = 10f;
-    [SerializeField] private bool _isJumping            = false; //for the animator
-    [SerializeField] private bool _enableJump           = false;
-    [SerializeField] private bool _canDoubleJump        = false;
-    [SerializeField] private bool _enableDoubleJump     = false;
-    [SerializeField] private float _timeBetweenAttack   = 1f;
+    [SerializeField] private int        _health             = 4;
+    [SerializeField] private float      _speed              = 4f;
+    [SerializeField] private float      _jumpHeight         = 10f;
+    [SerializeField] private bool       _isJumping          = false; //for the animator
+    [SerializeField] private bool       _enableJump         = false;
+    [SerializeField] private bool       _canDoubleJump      = false;
+    [SerializeField] private bool       _enableDoubleJump   = false;
+    [SerializeField] private float      _timeBetweenAttack  = 1f;
 
-    private bool _isGrounded;
-    private bool _isAttacking   = false;
-    private bool _onHit         = false;
-    private bool _isDead        = false;
-    private Rigidbody2D _rb2D;
-    private Grounding _grounding;
-    private CharacterAudioHelper _audio;
-    private PlayerAnimation _anim;
-    private float xMove;
+    private bool                        _isGrounded;
+    private bool                        _isAttacking        = false;
+    private bool                        _onHit              = false;
+    private bool                        _isDead             = false;
+    private Rigidbody2D                 _rb2D;
+    private Grounding                   _grounding;
+    private CharacterAudioHelper        _audio;
+    private PlayerAnimation             _anim;
+    private float                       xMove;
 
     public int Health { get => _health; set => _health = value; }
 
@@ -181,7 +181,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (_isDead) return;
         _health -= amount;
-        UIManager.Instance.UpdateLives(_health);
+        UIManager.Instance.UpdateLives(_health, false);
         _onHit = true;
         _anim.Hit();
 
@@ -197,7 +197,21 @@ public class Player : MonoBehaviour, IDamageable
     public bool IsPlayerDead() => _isDead;
     public void AddHealth(int amount)
     {
-        _health = amount;
-        UIManager.Instance.UpdateLives(_health);
+        print("Health is being called");
+        Health = amount;
+
+        //UIManager.Instance.UpdateLives(_health);
+        UIManager.Instance.UpdateLivesOnHealthPotion(this);
+    }
+
+    public void InstantDeath()
+    {
+        _onHit = true;
+        _anim.Hit();
+        _health = 0;
+        _anim.Death();
+        _isDead = true;
+        UIManager.Instance.UpdateLives(_health, false);
+        GameManager.Instance.GameOver();
     }
 }

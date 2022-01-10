@@ -7,25 +7,25 @@ public enum GameState { NONE, INTRO, ACTIVE, GAMEOVER, PAUSE, COMPLETE, SHOP }
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameState _state;
-    [SerializeField] private float _delayIntro;
-    [SerializeField] private Player _player;
-    [SerializeField] private CinemachineVirtualCamera _camera;
-    [SerializeField] private AudioSource _source = null;
-    [SerializeField] private AudioClip _gameWon;
-    [SerializeField] private AudioClip _gameLost;
-    [SerializeField] private Animator topBorder;
-    [SerializeField] private Animator bottomBorder;
-    [SerializeField] private Animator introText;
-    [SerializeField] private Animator outroText;
-    [SerializeField] private Animator findKey;
-    [SerializeField] private int _gems;
-    [SerializeField] private bool _hasKey = false;
-    [SerializeField] private bool _hasBoots = false;
-    [SerializeField] private bool _hasFlameSword = false;
-    [SerializeField] private bool _enableIntro;
-    [SerializeField] private GameObject menuOptions;
-    [SerializeField] private GameObject bgFadeIn;
+    [SerializeField] private GameState                  _state;
+    [SerializeField] private float                      _delayIntro;
+    [SerializeField] private Player                     _player;
+    [SerializeField] private CinemachineVirtualCamera   _camera;
+    [SerializeField] private AudioSource                _source = null;
+    [SerializeField] private AudioClip                  _gameWon;
+    [SerializeField] private AudioClip                  _gameLost;
+    [SerializeField] private Animator                   _topBorder;
+    [SerializeField] private Animator                   _bottomBorder;
+    [SerializeField] private Animator                   _introText;
+    [SerializeField] private Animator                   _outroText;
+    [SerializeField] private Animator                   _findKey;
+    [SerializeField] private int                        _gems;
+    [SerializeField] private bool                       _hasKey = false;
+    [SerializeField] private bool                       _hasBoots = false;
+    [SerializeField] private bool                       _hasFlameSword = false;
+    [SerializeField] private bool                       _enableIntro;
+    [SerializeField] private GameObject                 _menuOptions;
+    [SerializeField] private GameObject                 _bgFadeIn;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
 
     public void FindKey(bool value)
     {
-        findKey.gameObject.SetActive(value);
+        _findKey.gameObject.SetActive(value);
     }
 
     public GameState SetGameState(GameState state)
@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        UIManager.Instance.EnableHUD(false);
         StartCoroutine(GameOverScreenRoutine());
     }
 
@@ -105,7 +106,7 @@ public class GameManager : MonoBehaviour
         SetAnimatedGameObjectBorders(true);
         AudioManager.Instance.MusicSource.Stop();
         AudioManager.Instance.PlaySound(_source, _gameWon);
-        outroText.gameObject.SetActive(true);
+        _outroText.gameObject.SetActive(true);
         StartCoroutine(AcitivateMenuOptionsRoutine());
         //Time.timeScale = 0;
     }
@@ -122,7 +123,7 @@ public class GameManager : MonoBehaviour
         _camera.enabled = false;
         AudioManager.Instance.MusicSource.Stop();
         AudioManager.Instance.PlaySound(_source, _gameLost);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         UIManager.Instance.GameOverUI();
         Time.timeScale = 0;
     }
@@ -137,10 +138,10 @@ public class GameManager : MonoBehaviour
     IEnumerator IntroRoutine()
     {
         UIManager.Instance.EnableHUD(false);
-        topBorder.gameObject.SetActive(true);
-        bottomBorder.gameObject.SetActive(true);
+        _topBorder.gameObject.SetActive(true);
+        _bottomBorder.gameObject.SetActive(true);
         yield return new WaitForSeconds(1f);
-        introText.gameObject.SetActive(true);
+        _introText.gameObject.SetActive(true);
         yield return new WaitForSeconds(_delayIntro);
         TriggerAnimatedGOBorders();
         TriggerIntroText();
@@ -153,26 +154,26 @@ public class GameManager : MonoBehaviour
     public GameState GetGameState() => _state;
     public void TriggerAnimatedGOBorders()
     {
-        topBorder.SetTrigger("goUP");
-        bottomBorder.SetTrigger("goDown");
+        _topBorder.SetTrigger("goUP");
+        _bottomBorder.SetTrigger("goDown");
     }
 
     public void TriggerIntroText()
     {
-        introText.SetTrigger("fadeOut");
+        _introText.SetTrigger("fadeOut");
     }
 
     public void SetAnimatedGameObjectBorders(bool value)
     {
-        topBorder.gameObject.SetActive(value);
-        bottomBorder.gameObject.SetActive(value);
+        _topBorder.gameObject.SetActive(value);
+        _bottomBorder.gameObject.SetActive(value);
     }
 
     IEnumerator AcitivateMenuOptionsRoutine()
     {
         yield return new WaitForSeconds(5f);
-        bgFadeIn.SetActive(true);
-        outroText.gameObject.SetActive(false);
-        menuOptions.SetActive(true);
+        _bgFadeIn.SetActive(true);
+        _outroText.gameObject.SetActive(false);
+        _menuOptions.SetActive(true);
     }
 }

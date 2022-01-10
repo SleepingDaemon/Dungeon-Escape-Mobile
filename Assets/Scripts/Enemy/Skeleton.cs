@@ -5,10 +5,10 @@ using UnityEngine;
 public class Skeleton : Enemy
 {
     [Header("Revival Properties")]
-    [SerializeField] private float _minMinutesForRevival = 120f;
-    [SerializeField] private float _maxMinutesForRevival = 240f;
-    [SerializeField] private float _randomTime;
-    [SerializeField] private bool _revive = false;
+    [SerializeField] private float  _minMinutesForRevival   = 120f;
+    [SerializeField] private float  _maxMinutesForRevival   = 240f;
+    [SerializeField] private float  _randomTime;
+    [SerializeField] private bool   _revive                 = false;
 
     public override void InitData()
     {

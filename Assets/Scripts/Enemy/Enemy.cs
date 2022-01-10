@@ -8,14 +8,14 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [SerializeField] protected Transform    pointA, pointB;
     [SerializeField] protected GameObject   gemPrefab;
 
-    protected bool isHit = false;
-    [SerializeField] protected bool isDead = false;
-    protected Collider2D col;
-    protected Animator enemyAnim;
-    protected SpriteRenderer enemySprite;
-    protected Vector3 currentTarget;
-    protected Vector3 direction;
-    protected Player player;
+    protected bool                          isHit = false;
+    protected bool                          isDead = false;
+    protected Collider2D                    col;
+    protected Animator                      enemyAnim;
+    protected SpriteRenderer                enemySprite;
+    protected Vector3                       currentTarget;
+    protected Vector3                       direction;
+    protected Player                        player;
 
     public int Health { get => health; set => health = value; }
 
@@ -78,7 +78,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         //Resume back to walking when not in combat
         var _distance = Vector3.Distance(player.transform.position, transform.position);
-        if (_distance > 2.5 || player.IsPlayerDead())
+        if (_distance > 2.3 || player.IsPlayerDead())
         {
             isHit = false;
             if (enemyAnim != null)

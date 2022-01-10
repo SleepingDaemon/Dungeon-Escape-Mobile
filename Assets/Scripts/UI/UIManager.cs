@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    private static UIManager _instance;
-    public static UIManager Instance
+    private static UIManager                _instance;
+    public static UIManager                 Instance
     {
         get
         {
@@ -22,9 +21,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text           bootsAmount;
     [SerializeField] private Text           flameSwordAmount;
     [SerializeField] private Text           healthPotionAmount;
-    public Text KeyAmount { get => keyAmount; set => keyAmount = value; }
-    public Text BootsAmount { get => bootsAmount; set => bootsAmount = value; }
-    public Text FlameSwordAmount { get => flameSwordAmount; set => flameSwordAmount = value; }
 
     [Header("Shop Player Gem Count Text")]
     [SerializeField] private Text           playerGemAmount;
@@ -48,6 +44,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject     gameWon;
     [SerializeField] private Image[]        healthBars = new Image[4];
     private bool _pause = false;
+
+    public Text KeyAmount { get => keyAmount; set => keyAmount = value; }
+    public Text BootsAmount { get => bootsAmount; set => bootsAmount = value; }
+    public Text FlameSwordAmount { get => flameSwordAmount; set => flameSwordAmount = value; }
 
     public bool Pause { get => _pause; set => _pause = value; }
 
@@ -85,22 +85,34 @@ public class UIManager : MonoBehaviour
 
     public void UpdateShopGemCount(int gemCount) => playerGemAmount.text = gemCount.ToString() + "G";
 
-    public void UpdateLives(int livesRemaining)
+    public void UpdateLives(int livesRemaining, bool onHealthPotion)
     {
-        if(livesRemaining == 4)
+        if(livesRemaining == 0)
         {
-            healthBars[0].enabled = true;
-            healthBars[1].enabled = true;
-            healthBars[2].enabled = true;
-            healthBars[3].enabled = true;
-            return;
+            healthBars[0].enabled = false;
+            healthBars[1].enabled = false;
+            healthBars[2].enabled = false;
+            healthBars[3].enabled = false;
         }
 
         for (int i = 0; i <= livesRemaining; i++)
         {
             if (i == livesRemaining)
                 healthBars[i].enabled = false;
+
+            if (onHealthPotion)
+            {
+                i = 0;
+            }
         }
+    }
+
+    public void UpdateLivesOnHealthPotion(Player player)
+    {
+        healthBars[0].enabled = true;
+        healthBars[1].enabled = true;
+        healthBars[2].enabled = true;
+        healthBars[3].enabled = true;
     }
 
     public void PauseMenu()
@@ -136,6 +148,7 @@ public class UIManager : MonoBehaviour
         uiShop.SetActive(value);
 
     }
+
     public void EnableHUD(bool value)
     {
         hudGO.SetActive(value);

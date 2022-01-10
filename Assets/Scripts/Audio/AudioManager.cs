@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -19,16 +18,14 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private AudioMixer _mixer = null;
-    [SerializeField] private AudioSource _audioSource = null;
-    [SerializeField] private AudioSource _playerSource = null;
-    [SerializeField] private AudioSource _uiSource = null;
-    [SerializeField] private AudioSource _musicSource = null;
-    [SerializeField] private AudioSource _sceneSource = null;
-    [SerializeField] private AudioClip _gemSound;
-    [SerializeField] private AudioClip _dragonSound;
-
-    public AudioMixer Mixer { get => _mixer; set => _mixer = value; }
+    [SerializeField] private AudioMixer     _mixer          = null;
+    [SerializeField] private AudioSource    _audioSource    = null;
+    [SerializeField] private AudioSource    _playerSource   = null;
+    [SerializeField] private AudioSource    _uiSource       = null;
+    [SerializeField] private AudioSource    _musicSource    = null;
+    [SerializeField] private AudioSource    _sceneSource    = null;
+    [SerializeField] private AudioClip      _gemSound;
+    [SerializeField] private AudioClip      _dragonSound;
     public AudioSource MusicSource { get => _musicSource; set => _musicSource = value; }
 
     private void Awake()
