@@ -177,10 +177,9 @@ MonoBehaviour:
   pointA: {fileID: 8958165331605650375}
   pointB: {fileID: 8958165331207985111}
   gemPrefab: {fileID: 8685249164836656535, guid: 96e8557e3d148134383c4157905cecc9, type: 3}
-  isDead: 0
-  acidPrefab: {fileID: 1528360116033048960, guid: 1dccaf1ebd6c4e24087d90b9a3c610d6, type: 3}
+  _acidPrefab: {fileID: 1528360116033048960, guid: 1dccaf1ebd6c4e24087d90b9a3c610d6, type: 3}
   _firePoint: {fileID: 8958165332190672761}
-  waitTimeBeforeAttack: 1.25
+  _waitTimeBeforeAttack: 2
 --- !u!61 &8958165332461458682
 BoxCollider2D:
   m_ObjectHideFlags: 0

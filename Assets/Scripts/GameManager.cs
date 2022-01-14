@@ -56,8 +56,13 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if(_enableIntro)
+        Time.timeScale = 1f;
+        Cursor.visible = false;
+
+        if (_enableIntro)
             _state = SetGameState(GameState.INTRO);
+        else
+            _state = SetGameState(GameState.ACTIVE);
     }
 
     private void Update()
@@ -84,17 +89,20 @@ public class GameManager : MonoBehaviour
         if (value == true)
         {
             _state = SetGameState(GameState.PAUSE);
+            Cursor.visible = true;
             Time.timeScale = 0;
         }
         else
         {
             _state = SetGameState(GameState.ACTIVE);
+            Cursor.visible = false;
             Time.timeScale = 1;
         }
     }
 
     public void GameOver()
     {
+        Cursor.visible = true;
         UIManager.Instance.EnableHUD(false);
         StartCoroutine(GameOverScreenRoutine());
     }
@@ -125,7 +133,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlaySound(_source, _gameLost);
         yield return new WaitForSeconds(1.5f);
         UIManager.Instance.GameOverUI();
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
     }
 
     public void SubGems(int amount) => _gems -= amount;

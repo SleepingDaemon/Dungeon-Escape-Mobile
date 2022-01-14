@@ -25,8 +25,10 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         _adUnitId = null; // This will remain null for unsupported platforms
 #if UNITY_IOS
         _adUnitId = _iOsAdUnitId;
+        _showAdButton.enabled = true;
 #elif UNITY_ANDROID
-		_adUnitId = _androidAdUnitId;
+        _adUnitId = _androidAdUnitId;
+        _showAdButton.enabled = true;
 #endif
     }
 
@@ -35,7 +37,11 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         Debug.Log("Ad Loaded: " + _adUnitId);
 
         if (Advertisement.isInitialized)
+        {
             Advertisement.Load(_adUnitId, this);
+
+        }
+
     }
 
     public void ShowRewardedAd()

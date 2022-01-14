@@ -34,8 +34,9 @@ public class Skeleton : Enemy
         _randomTime = UnityEngine.Random.Range(_minMinutesForRevival, _maxMinutesForRevival);
         yield return new WaitForSeconds(_randomTime);
         health = 5;
-        col.enabled = true;
         enemyAnim.SetTrigger("revive");
+        yield return new WaitForSeconds(1f);
+        col.enabled = true;
         _revive = false;
     }
 

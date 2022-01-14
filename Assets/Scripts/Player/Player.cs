@@ -111,10 +111,17 @@ public class Player : MonoBehaviour, IDamageable
             UIManager.Instance.PauseMenu();
         }
 
-        if (CrossPlatformInputManager.GetButtonDown("Attack") || Input.GetKeyDown(KeyCode.Mouse0) && _isGrounded && !_isAttacking)
+        if (_isGrounded)
         {
-            StartCoroutine(AttackRoutine());
+            if (CrossPlatformInputManager.GetButtonDown("Attack")
+                || Input.GetKeyDown(KeyCode.Mouse0)
+                && !_isAttacking
+                && !_isJumping)
+            {
+                StartCoroutine(AttackRoutine());
+            }
         }
+
     }
 
     private void FixedUpdate()

@@ -41,7 +41,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject     hudGO;
     [SerializeField] private GameObject     pauseMenu;
     [SerializeField] private GameObject     gameOverMenu;
-    [SerializeField] private GameObject     gameWon;
     [SerializeField] private Image[]        healthBars = new Image[4];
     private bool _pause = false;
 
@@ -59,6 +58,7 @@ public class UIManager : MonoBehaviour
     public void OpenShop(int gemCount)
     {
         GameManager.Instance.SetGameState(GameState.SHOP);
+        Cursor.visible = true;
         EnableHUD(false);
         playerGemAmount.text = gemCount + "G";
     }
@@ -69,6 +69,7 @@ public class UIManager : MonoBehaviour
         selectionGO.SetActive(false);
         EnableHUD(true);
         gemCountDisplay.text = GameManager.Instance.GetGemsAmount().ToString() + "G";
+        Cursor.visible = false;
         GameManager.Instance.SetGameState(GameState.ACTIVE);
     }
 
@@ -136,11 +137,6 @@ public class UIManager : MonoBehaviour
     public void GameOverUI()
     {
         gameOverMenu.SetActive(true);
-    }
-
-    public void GameWonUI()
-    {
-        gameWon.SetActive(true);
     }
 
     public void EnableShop(bool value)
